@@ -13,10 +13,10 @@ namespace MonoGameUI
     public class GameController : Game
     {
         #region Fields
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
-        private Rectangle _screenRectangle;
-        private Scene _currentScene;
+        protected GraphicsDeviceManager _graphics;
+        protected SpriteBatch _spriteBatch;
+        protected Rectangle _screenRectangle;
+        protected Scene _currentScene;
         #endregion
 
         #region Properties
