@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameUI.Events;
+using Utilities;
 
 namespace MonoGameUI.Base
 {
@@ -26,7 +27,7 @@ namespace MonoGameUI.Base
         public event EventHandler DoubleClick;
         public event EventHandler MouseOver;
         public event EventHandler MouseGone;
-        public event EventHandler<IntegerEventArgs> ScrollWheelChange;
+        public event EventHandler<EventData<int>> ScrollWheelChange;
         #endregion
 
         #region Constructors
@@ -131,9 +132,9 @@ namespace MonoGameUI.Base
         #endregion
 
         #region Event Handling
-        private void OnMouseMoved(object sender, PointEventArgs e)
+        private void OnMouseMoved(object sender, EventData<Point> eventData)
         {
-            var mousePosition = e.Point;
+            var mousePosition = eventData.Data;
 
             if (!IsMouseOver && Rectangle.Contains(mousePosition))
             {
@@ -165,10 +166,10 @@ namespace MonoGameUI.Base
                 RightClick?.Invoke(this, e);
         }
 
-        private void OnScrollWheelMove(object sender, IntegerEventArgs e)
+        private void OnScrollWheelMove(object sender, EventData<int> eventData)
         {
             if (IsMouseOver)
-                ScrollWheelChange?.Invoke(this, e);
+                ScrollWheelChange?.Invoke(this, eventData);
         }
         #endregion
 

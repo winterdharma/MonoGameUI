@@ -5,6 +5,7 @@ using MonoGameUI.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Utilities;
 
 namespace MonoGameUI.Base
 {
@@ -24,7 +25,7 @@ namespace MonoGameUI.Base
         #endregion
 
         #region Events
-        public event EventHandler<RectangleEventArgs> RectangleUpdated;
+        public event EventHandler<EventData<Rectangle>> RectangleUpdated;
         public event EventHandler EnabledChanged;
         public event EventHandler VisibleChanged;
         public event EventHandler<ElementEventArgs> ElementLeftClicked;
@@ -55,7 +56,7 @@ namespace MonoGameUI.Base
             protected set
             {
                 _panelRectangle = value;
-                RectangleUpdated?.Invoke(this, new RectangleEventArgs(_panelRectangle));
+                RectangleUpdated?.Invoke(this, new EventData<Rectangle>(_panelRectangle));
             }
         }
         public Dictionary<string, Element> Elements
@@ -204,12 +205,12 @@ namespace MonoGameUI.Base
                 ElementMouseGone?.Invoke(this, new ElementEventArgs(element));
         }
 
-        protected virtual void OnElementScrollWheelMoved(object sender, IntegerEventArgs e)
+        protected virtual void OnElementScrollWheelMoved(object sender, EventData<int> eventData)
         {
             var element = sender as Element;
 
             if (Parent.IsDrawableOnTopDrawLayer(element, _visibleElements.ToList<IDrawable>()))
-                ElementScrollWheelMoved?.Invoke(this, new ElementEventArgs(element, e.Value));
+                ElementScrollWheelMoved?.Invoke(this, new ElementEventArgs(element, eventData.Data));
         }
         #endregion
 

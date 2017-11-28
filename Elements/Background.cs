@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameUI.Base;
 using MonoGameUI.Events;
+using Utilities;
 
 namespace MonoGameUI.Elements
 {
@@ -26,9 +27,9 @@ namespace MonoGameUI.Elements
         }
         #endregion
 
-        private void OnPanelRectangleUpdate(object sender, RectangleEventArgs e)
+        private void OnPanelRectangleUpdate(object sender, EventData<Rectangle> eventData)
         {
-            Rectangle = e.Rectangle;
+            Rectangle = eventData.Data;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

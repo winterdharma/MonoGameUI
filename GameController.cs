@@ -115,7 +115,7 @@ namespace MonoGameUI
         protected override void Update(GameTime gameTime)
         {
             InputListener.Update(gameTime);
-            CurrentScene.Update(gameTime);
+            CurrentScene?.Update(gameTime);
         }
 
 
@@ -126,7 +126,7 @@ namespace MonoGameUI
         {
             // clear the previous frame
             GraphicsDevice.Clear(Color.Black);
-            CurrentScene.Draw(gameTime);
+            CurrentScene?.Draw(gameTime);
         }
     }
 }

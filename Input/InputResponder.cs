@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using MonoGameUI.Events;
 using System;
+using Utilities;
 
 namespace MonoGameUI.Input
 {
@@ -47,8 +48,8 @@ namespace MonoGameUI.Input
         public event EventHandler<EventArgs> LeftMouseClick;
         public event EventHandler<EventArgs> DoubleLeftMouseClick;
         public event EventHandler<EventArgs> RightMouseClick;
-        public event EventHandler<PointEventArgs> NewMousePosition;
-        public event EventHandler<IntegerEventArgs> ScrollWheelMoved;
+        public event EventHandler<EventData<Point>> NewMousePosition;
+        public event EventHandler<EventData<int>> ScrollWheelMoved;
         #endregion
 
 
@@ -76,7 +77,7 @@ namespace MonoGameUI.Input
         {
             PreviousMousePosition = CurrentMousePosition;
             CurrentMousePosition = e.Position;
-            NewMousePosition?.Invoke(this, new PointEventArgs(e.Position));
+            NewMousePosition?.Invoke(this, new EventData<Point>(e.Position));
         }
 
         private void OnMouseClick(object sender, MouseEventArgs e)
@@ -93,7 +94,7 @@ namespace MonoGameUI.Input
 
         private void OnMouseScrollWheelMove(object sender, MouseEventArgs e)
         {
-            ScrollWheelMoved?.Invoke(this, new IntegerEventArgs(e.ScrollWheelDelta));
+            ScrollWheelMoved?.Invoke(this, new EventData<int>(e.ScrollWheelDelta));
         }
 
         private void OnKeyPressed(object sender, KeyboardEventArgs e)
