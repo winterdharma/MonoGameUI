@@ -17,28 +17,21 @@ namespace MonoGameUI.Events
 
     public class UserInputEventArgs : EventArgs
     {
-        private Element _element;
-        private Keys _key;
-
-        public object EventSource
-        {
-            get
-            {
-                if (_element != null && _key == Keys.None)
-                    return _element;
-                else if (_key != Keys.None && _element == null)
-                    return _key;
-                else
-                    throw new ArgumentException("One source is required, either an Element or a Key.");
-            }
-        }
+        public object EventSource { get; }
         public EventType EventType { get; }
 
         public UserInputEventArgs(EventType eventType, Element elementSource = null,
             Keys keySource = Keys.None)
         {
-            _element = elementSource;
-            _key = keySource;
+            if ((elementSource == null && keySource == Keys.None) || 
+                (elementSource != null && keySource != Keys.None))
+                throw new ArgumentException("One source is required, either an Element or a Key.");
+
+            if (elementSource != null)
+                EventSource = elementSource;
+            else
+                EventSource = keySource;
+
             EventType = eventType;
         }
     }
