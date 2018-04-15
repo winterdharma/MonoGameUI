@@ -42,9 +42,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Utilities">
-      <HintPath>..\..\Utilities\bin\Debug\Utilities.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\Component.cs" />
@@ -53,6 +50,7 @@
     <Compile Include="Base\Scene.cs" />
     <Compile Include="Base\UserAction.cs" />
     <Compile Include="Components\Screen.cs" />
+    <Compile Include="Components\TileMap.cs" />
     <Compile Include="Elements\Background.cs" />
     <Compile Include="Elements\Button.cs" />
     <Compile Include="Elements\Image.cs" />
@@ -72,6 +70,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Utilities\Utilities.csproj">
+      <Project>{de3e99b1-50b2-4f70-8b36-35bbc4b32feb}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
