@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameUI", "MonoGameUI.csproj", "{E07B86C4-92B9-40C0-AA1D-B21D18BD503F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "..\Test\Test.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "..\..\Utilities\Utilities.csproj", "{DE3E99B1-50B2-4F70-8B36-35BBC4B32FEB}"
 EndProject
 Global
@@ -19,10 +17,6 @@ Global
 		{E07B86C4-92B9-40C0-AA1D-B21D18BD503F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E07B86C4-92B9-40C0-AA1D-B21D18BD503F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E07B86C4-92B9-40C0-AA1D-B21D18BD503F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EDF4429-251A-416D-BB68-93F227191BCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EDF4429-251A-416D-BB68-93F227191BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DE3E99B1-50B2-4F70-8B36-35BBC4B32FEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DE3E99B1-50B2-4F70-8B36-35BBC4B32FEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE3E99B1-50B2-4F70-8B36-35BBC4B32FEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
