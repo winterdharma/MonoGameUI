@@ -7,34 +7,36 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGameUI.Elements;
+using MonoGameUI.Assets;
 
 namespace MonoGameUI.Components
 {
     /// <summary>
-    /// This low-level TileMap takes a tilesheet Texture2D and converts it to a hash of
-    /// Textures2Ds indexed with integers. It provides an API that loads entire layers,
-    /// adds and removes individual images, updates and draws the tilemap. The tilemap
+    /// This low-level TileMap handles Image elements and viewport positioning using
+    /// integers ids only. It provides an API that loads multiple layers,
+    /// adds and removes individual images, and updates and draws the tilemap. The tilemap
     /// doesn't support animations yet, but it does support an arbitrary number of layers.
+    /// It interacts with the Textures class directly to fetch Texture2D assets.
     /// 
     /// This class is intended to be extended when actually implemented for a game to 
-    /// add game-specific functions like the interface with a game's model, meaningful
-    /// tile names with an enum, etc.
+    /// add game-specific functions like an interface with a game's model and meaningful
+    /// tile names using enums. Note that if enums are used, they must map to unique integer 
+    /// values.
     /// </summary>
     public class TileMap : Component
     {
         #region Fields
         protected int _tileSize;
-        protected Dictionary<int, Texture2D> _tileTextures;
         protected Rectangle _viewport;
         protected Vector2 _viewportCenter;
         protected Rectangle _mapRectangle;
         #endregion
 
         #region Constructor
-        public TileMap(Scene parent, int drawOrder, Texture2D tileSheet, Point mapSizeInTiles, Rectangle viewPort, int layers = 1, int tileSize = 32) : base(parent, drawOrder)
+        public TileMap(Scene parent, int drawOrder, Point mapSizeInTiles, Rectangle viewPort, 
+            int layers = 1, int tileSize = 32) : base(parent, drawOrder)
         {
             _tileSize = tileSize;
-            _tileTextures = InitializeTileTextures(tileSheet);
             _mapRectangle = new Rectangle(0, 0, 
                 mapSizeInTiles.X * tileSize, mapSizeInTiles.Y * tileSize);
             _viewport = viewPort;
@@ -43,7 +45,6 @@ namespace MonoGameUI.Components
         #endregion
 
         #region Properties
-        public Dictionary<int, Texture2D> TileTextures { get => _tileTextures; }
         public Rectangle MapRectangle { get => _mapRectangle; }
         public Rectangle Viewport { get => _viewport; }
         #endregion
@@ -53,52 +54,24 @@ namespace MonoGameUI.Components
         {
             return new Rectangle();
         }
-
-        protected Dictionary<int, Texture2D> InitializeTileTextures(Texture2D tileSheet)
-        {
-            Point[] texturePositions = GetTileTexturePositions(tileSheet.Bounds);
-            var textures = new Dictionary<int, Texture2D>();
-
-            for(int i = 0; i < texturePositions.Length; i++)
-            {
-                textures[i] = GetTileTexture(tileSheet, texturePositions[i]);
-            }
-
-            return textures;
-        }
-
-        protected Point[] GetTileTexturePositions(Rectangle sheetSize)
-        {
-            if((sheetSize.Width % _tileSize != 0) ||
-                (sheetSize.Height % _tileSize != 0))
-            {
-                throw new Exception("Tilesheet doesn't divide evenly by given tile size");
-            }
-
-            int width = sheetSize.Width / _tileSize;
-            int height = sheetSize.Height / _tileSize;
-            Point[] positions = new Point[width * height];
-
-            for(int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    positions[(y * width) + x] = new Point(x * _tileSize, y * _tileSize);
-                }
-            }
-            return positions;
-        }
         #endregion
 
         #region Public API
+        /// <summary>
+        /// @tileLayers consists of 1 or more tileId layers. ints in the layer data must
+        /// correspond to keys in Textures.Textures2D to fetch assets properly.
+        /// </summary>
+        /// <param name="tileLayers"></param>
         public void LoadLayers(int[,] tileLayers)
         {
-            for(int i = 0; i < tileLayers.GetLength(0); i++)
+            for(int layer = 0; layer < tileLayers.GetLength(0); layer++)
             {
-                for(int y = 0; y < tileLayers.GetLength(1); y++)
+                //This is a one dimensional array of a two dimensional Cartesian map.
+                //First element is the bottom-left corner, going left to right, bottom to top.
+                for(int index = 0; index < tileLayers.GetLength(1); index++)
                 {
                     int mapWidth = (int)Math.Sqrt(tileLayers.GetLength(1));
-                    AddImage((y % mapWidth), (y / mapWidth), tileLayers[i , y], i);
+                    AddImage((index % mapWidth), (index / mapWidth), tileLayers[layer , index], layer);
                 }
             }
             var els = Elements;
@@ -140,7 +113,7 @@ namespace MonoGameUI.Components
             var elements = new Dictionary<string, Element>(Elements);
             elements[imageId] = new Image(imageId, this,
                 new Vector2(mapTileX * _tileSize, mapTileY * _tileSize), 
-                _tileTextures[textureId], layer);
+                Textures.Textures2D[textureId], layer);
             Elements = elements;
             Elements[imageId].Show();
         }
@@ -175,19 +148,6 @@ namespace MonoGameUI.Components
         protected virtual string GetImageId(int x, int y)
         {
             return "image@[" + x + ", " + y + "]";
-        }
-
-        protected Texture2D GetTileTexture(Texture2D tileSheet, Point position)
-        {
-            Rectangle sourceRectangle = new Rectangle(position.X, position.Y, _tileSize, _tileSize);
-            Texture2D texture = new Texture2D(Parent.Game.GraphicsDevice, sourceRectangle.Width, 
-                sourceRectangle.Height);
-            Color[] data = new Color[sourceRectangle.Width * sourceRectangle.Height];
-
-            tileSheet.GetData(0, sourceRectangle, data, 0, data.Length);
-            texture.SetData(data);
-
-            return texture;
         }
         #endregion
     }
