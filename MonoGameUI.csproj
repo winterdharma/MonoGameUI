@@ -56,6 +56,7 @@
     <Compile Include="Elements\Button.cs" />
     <Compile Include="Elements\Image.cs" />
     <Compile Include="Elements\LineOfText.cs" />
+    <Compile Include="Elements\Sprite.cs" />
     <Compile Include="GameController.cs" />
     <Compile Include="Events\ElementEventArgs.cs" />
     <Compile Include="Events\KeyboardEventArgs.cs" />
@@ -71,12 +72,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Utilities\Utilities.csproj">
-      <Project>{de3e99b1-50b2-4f70-8b36-35bbc4b32feb}</Project>
-      <Name>Utilities</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

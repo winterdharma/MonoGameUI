@@ -37,8 +37,9 @@ namespace MonoGameUI.Components
             int layers = 1, int tileSize = 32) : base(parent, drawOrder)
         {
             _tileSize = tileSize;
-            _mapRectangle = new Rectangle(0, 0, 
-                mapSizeInTiles.X * tileSize, mapSizeInTiles.Y * tileSize);
+            var mapSizeInPixels = new Point(mapSizeInTiles.X * _tileSize,
+                mapSizeInTiles.Y * _tileSize);
+            _mapRectangle = new Rectangle(0, 0, mapSizeInPixels.X, mapSizeInPixels.Y);
             _viewport = viewPort;
             _viewportCenter = new Vector2(_viewport.Center.X, _viewport.Center.Y);
         }
@@ -62,19 +63,23 @@ namespace MonoGameUI.Components
         /// correspond to keys in Textures.Textures2D to fetch assets properly.
         /// </summary>
         /// <param name="tileLayers"></param>
-        public void LoadLayers(int[,] tileLayers)
+        public Dictionary<string, Element> LoadLayers(int[,] tileLayers)
         {
-            for(int layer = 0; layer < tileLayers.GetLength(0); layer++)
+            var elements = new Dictionary<string, Element>();
+            Image image;
+            for (int layer = 0; layer < tileLayers.GetLength(0); layer++)
             {
                 //This is a one dimensional array of a two dimensional Cartesian map.
                 //First element is the bottom-left corner, going left to right, bottom to top.
                 for(int index = 0; index < tileLayers.GetLength(1); index++)
                 {
                     int mapWidth = (int)Math.Sqrt(tileLayers.GetLength(1));
-                    AddImage((index % mapWidth), (index / mapWidth), tileLayers[layer , index], layer);
+                    image = CreateImage((index % mapWidth), (index / mapWidth), 
+                        tileLayers[layer , index], layer);
+                    elements[image.Id] = image;
                 }
             }
-            var els = Elements;
+            return elements;
         }
 
         public override void Update(GameTime gameTime)
@@ -99,25 +104,37 @@ namespace MonoGameUI.Components
         }
 
         /// <summary>
-        /// Adds an Image element to the TileMap at the Map coordinates specified,
-        /// with the texture that matches the textureId, and with a drawOrder equal
-        /// to its layer number.
+        /// Creates a new Image element given tile coords, a texture Id, and a layer number.
         /// </summary>
         /// <param name="mapTileX"></param>
         /// <param name="mapTileY"></param>
         /// <param name="textureId"></param>
         /// <param name="layer"></param>
-        public void AddImage(int mapTileX, int mapTileY, int textureId, int layer)
+        /// <returns></returns>
+        public Image CreateImage(int mapTileX, int mapTileY, int textureId, int layer)
         {
             string imageId = GetImageId(mapTileX, mapTileY);
-            var elements = new Dictionary<string, Element>(Elements);
-            elements[imageId] = new Image(imageId, this,
-                new Vector2(mapTileX * _tileSize, mapTileY * _tileSize), 
+            return new Image(imageId, this, new Vector2(mapTileX * _tileSize, mapTileY * _tileSize),
                 Textures.Textures2D[textureId], layer);
-            Elements = elements;
-            Elements[imageId].Show();
         }
 
+        /// <summary>
+        /// Adds an Image element to the TileMap hash of Elements and activates it.
+        /// </summary>
+        /// <param name="image">The Image element to be added to the TileMap</param>
+        public void AddImage(Image image)
+        {
+            var elements = new Dictionary<string, Element>(Elements);
+            elements[image.Id] = image; 
+            Elements = elements;
+            Elements[image.Id].Show();
+        }
+
+        /// <summary>
+        /// Removes an Image currently on the TileMap at the coords specified.
+        /// </summary>
+        /// <param name="mapTileX"></param>
+        /// <param name="mapTileY"></param>
         public void RemoveImage(int mapTileX, int mapTileY)
         {
             var elements = new Dictionary<string, Element>(Elements);
