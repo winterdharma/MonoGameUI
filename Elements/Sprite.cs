@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 namespace MonoGameUI.Elements
 {
     /// <summary>
-    /// Sprite extends Image to allow it to have multiple images that it can display. It accepts
-    /// a spritesheet and creates a Dictionary of frames that crop it into individual images.
-    /// It is not meant to be animated as-is, but could be used to create a simple animated loop
-    /// by externally updating its CurrentFrame property.
+    /// Sprite extends Image to allow it to have multiple Texture2D frames that it can display. 
+    /// It accepts a spritesheet and creates a Dictionary of frames that crop it into individual 
+    /// images. It is not meant to be animated as-is, but could be used to create a simple animated 
+    /// loop by externally updating its CurrentFrame property.
     /// 
     /// This class is intended to be extended for a game implementation.
     /// </summary>
@@ -21,7 +21,7 @@ namespace MonoGameUI.Elements
     {
 
         #region Fields
-        private Rectangle _frame;
+        protected Rectangle _frame;
         #endregion
 
         #region Constructors
@@ -62,9 +62,9 @@ namespace MonoGameUI.Elements
         #region Initialization Methods
         private void InitializeSprite(int tilesize)
         {
+            _frame = new Rectangle(0, 0, tilesize, tilesize);
             Frames = CreateFrames();
             CurrentFrame = 0;
-            _frame = new Rectangle(0, 0, tilesize, tilesize);
             Rectangle = CreateRectangle(); 
         }
 
